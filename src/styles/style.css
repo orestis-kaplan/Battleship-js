@@ -1,0 +1,87 @@
+body{
+    background: #3b3939;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.container{
+    display: flex;
+    justify-content: space-evenly;
+}
+.player-1-board,.player-2-board{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column-reverse;
+    float: left;
+    height: 531px;
+    min-width: 521px;
+}
+
+.cell{
+    background-image: url('../images/water-tile.jpg');
+    background-size: cover;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    width: 50px;
+}
+.cell-dark{
+    background-image: url('../images/water-tile.jpg');
+    background-size: cover;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    width: 50px;
+    opacity: 0.5;
+}
+.ship-3-image{
+    height: 154px;
+    width: 49px;
+}
+.ship-4-image{
+    height: 205px;
+    width: 48px;
+}
+
+.ship-5-image{
+    height: 257px;
+    width: 50px;
+}
+
+.explosion{
+    background-image: url('../images/explosion.png');
+    background-size: 578px;
+    background-position: 0px -2px;
+    height: 50px;
+    width: 50px;
+    z-index: 3;
+}
+
+.horizontal{
+    transform: rotate(90deg) translateY(-50px);
+    transform-origin: top left;
+}
+
+.vertical{
+    transform: unset;
+    transform-origin: top left;
+}
+
+.directionButton{
+    padding: 10px 0;
+    background-color: aquamarine;
+    border: none;
+}
+
+.startButton{
+    padding: 10px 37px;
+    background-color: aquamarine;
+    border: none;
+}
+.set-positions-button{
+    text-align: center;
+}
+.start-game-button{
+    text-align: center;
+}
