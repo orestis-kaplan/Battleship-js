@@ -1,13 +1,4 @@
 
-function shipExistsInPosition(ship, position) {
-  if (ship) {
-    return ship.getPosition().some((element) => element.x === position.x && element.y === position.y);  
-  }else{
-    return false;
-  }
-  
-}
-
 function initMap(size){
   var sx = 0;
   var sy = 0;
@@ -24,13 +15,14 @@ function initMap(size){
 export default class Gameboard {
   constructor() {
     this.map = initMap(10);
-    this.ships = [];
+    this.ships = 5;
     this.attacksOnTargetPositions = [];
     this.missedAttacksPositions = [];
   }
 
-  receiveAttack(ship, position) {
-    if (shipExistsInPosition(ship, position)) {
+  receiveAttack(position) {
+    const ship = this.map[position.x][position.y].occupied;
+    if (ship !== null) {
       ship.hit();
       if (ship.isSunk()) {
         this.ships -= 1;
@@ -42,16 +34,11 @@ export default class Gameboard {
     }
   }
 
-  removeShip(ship) {
-    const index = this.ships.findIndex((element) => element.position.x === ship.position.x
-                                        && element.position.y === ship.position.y);
-    this.ships.splice(index, 1);
-
+  removeShip(ship) { 
     ship.getPosition().forEach(pos =>{ this.map[pos.x][pos.y].occupied = null;});
   }
 
   insertShip(ship) {
-    this.ships.push(ship);    
     ship.getPosition().forEach(pos => this.map[pos.x][pos.y].occupied = ship);
   }
 

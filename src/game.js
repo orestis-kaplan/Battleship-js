@@ -1,17 +1,17 @@
 export default class Game {
     constructor(player1,player2){
         this.player1 = player1;
-        this.currentPlayer = player1;
         this.player2 = player2;
+        this.currentPlayer = player1;
         this.finished = false;
     }
 
     gameOver(){
         let winner = null;
-        if(this.player1.board.ships.length === 0){
+        if(this.player1.board.ships === 0){
             this.finished = true;
             winner = this.player2;
-        }else if (this.player2.board.ships.length === 0) {
+        }else if (this.player2.board.ships === 0) {
             this.finished = true;
             winner = this.player1;
         }
@@ -23,11 +23,8 @@ export default class Game {
             (this.currentPlayer === this.player1) ? this.player2 : this.player1);            
         const ship = enemy.board.map[latlong.x][latlong.y].occupied;
         if(this.finished === false){
-            enemy.board.receiveAttack(ship,{x: latlong.x,y: latlong.y});
-            if(!enemy.board.map[latlong.x][latlong.y].occupied)
-            {                
-                this.currentPlayer = enemy;
-            }                
+            enemy.board.receiveAttack({x: latlong.x,y: latlong.y});
+            this.currentPlayer = enemy;                         
         }
     }
 
@@ -39,5 +36,6 @@ export default class Game {
 
         const pos = {x: x,y: y};
         this.move(pos);
+        return pos;
     }
 }

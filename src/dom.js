@@ -37,13 +37,20 @@ function createBoards(){
                     initImage(ship,shipImg);
                     cell.appendChild(shipImg);    
                 }                
+                else if(ship !== null && ship.x === coordinate.x && ship.y === coordinate.y && index == 1){
+                    ship = coordinate.occupied;  
+                    shipImg.className = `ship-${ship.length}-destroyed-image`;
+                    shipImg.src = `./src/images/ship-${ship.length}-destroyed.png`;
+                    shipImg.style.position = 'absolute';
+                    shipImg.style.display = 'none';
+                    initImage(ship,shipImg);
+                    cell.appendChild(shipImg);
+                }
                 draggable(shipImg,board,ship);
             });
         });
         container.appendChild(boardDiv);
         document.body.appendChild(container);
-        console.log(board);
-
     });
 }
 
@@ -102,7 +109,6 @@ function draggable(shipImg,board,ship){
         if (drag === true) {
             drag = false;
             board.insertShip(ship);                    
-            console.log(ship,board);
         }        
       });
 }
@@ -127,7 +133,93 @@ function rotation(ship,image){
     }
 }
 
-function animateExplosion(element){
+function setPositionsButton(game){
+    let buttonDiv = document.createElement("div");
+    buttonDiv.className = "set-positions-button";
+    let directionButton = document.createElement("button");
+    directionButton.className = "directionButton";
+    directionButton.innerText = "Begin positioning";
+    buttonDiv.appendChild(directionButton);
+    document.getElementsByClassName("container")[0].insertAdjacentElement("beforebegin",buttonDiv);
+
+    directionButton.addEventListener("click",()=>{
+        setPositions = true;
+        buttonDiv.style.display = "none";
+        startGameButton(game);
+    });
+}
+
+function startGameButton(game){
+    let buttonDiv = document.createElement("div");
+    buttonDiv.className = 'start-game-button'; 
+    let startButton = document.createElement("button");
+    startButton.className = "startButton";
+    startButton.innerText = "Start";
+    buttonDiv.appendChild(startButton);
+    document.getElementsByClassName("container")[0].insertAdjacentElement("beforebegin",buttonDiv);
+
+    startButton.addEventListener("click",()=>{
+        setPositions = false;
+        buttonDiv.style.display = "none";
+        gameStart(game);
+    });
+}
+
+function gameStart(game){
+    let board = Object.values(boards)[1];
+    let cellIndex = 0;
+
+    board.map.forEach((element)=>{
+        element.forEach((cell)=>{
+            let cellDiv = document.getElementsByClassName('cell-dark')[cellIndex];
+            let missedAttackImg = document.createElement('img');
+            missedAttackImg.src = './src/images/splash.png';
+            let ship = cell.occupied;
+            cellDiv.addEventListener('click',()=>{
+                if(!game.gameOver()){
+                    playerPLays(game,cell,cellDiv,ship);
+                    computerPlays(game,ship);               
+                }                                        
+            });
+            cellIndex +=1 ;
+        });
+        
+    });
+}
+
+function playerPLays(game,cell,cellDiv,ship){
+    let missedAttackImg = document.createElement('img');
+    missedAttackImg.src = './src/images/splash.png';
+    game.move(cell);    
+    if(cell.occupied === null){
+        cellDiv.style.opacity = 1;
+        cellDiv.appendChild(missedAttackImg);   
+        console.log(cellDiv,missedAttackImg);
+    }else{
+        cellDiv.style.opacity = 1;
+        animateExplosion(cellDiv);
+        if(ship.energy === 0 && !game.gameOver()){                            
+            document.getElementsByClassName(`ship-${ship.length}-destroyed-image`)[0].style.display = "block";
+        }else if(game.gameOver()){
+            endGameMessage(game.gameOver());
+        }
+    }
+}
+
+function computerPlays(game,ship){
+    let missedAttackImg = document.createElement('img');
+    missedAttackImg.src = './src/images/splash.png';
+    let pos = game.computerMove(ship); 
+    let enemyBoardCell = document.querySelector(`.cell[data-x~="${pos.x}"][data-y~="${pos.y}"]`);
+    ship = Object.values(boards)[0].map[pos.x][pos.y].occupied;
+    if(ship === null){
+        enemyBoardCell.appendChild(missedAttackImg);   
+    }else{
+        animateExplosion(enemyBoardCell);     
+    }
+}
+
+function animateExplosion(element){    
     let position = 105;
     const interval = 90;
     let explosion = document.createElement('div');
@@ -144,39 +236,30 @@ function animateExplosion(element){
     element.appendChild(explosion);
 }
 
-function setPositionsButton(){
-    let buttonDiv = document.createElement("div");
-    buttonDiv.className = "set-positions-button";
-    let directionButton = document.createElement("button");
-    directionButton.className = "directionButton";
-    directionButton.innerText = "Begin positioning";
-    buttonDiv.appendChild(directionButton);
-    document.getElementsByClassName("container")[0].insertAdjacentElement("beforebegin",buttonDiv);
+function endGameMessage(winner){
+    const messageWrapper = document.createElement("div");
+    messageWrapper.className = 'message-wrapper';
+    const messageDiv = document.createElement("div");
+    messageDiv.className = 'message-div';
 
-    directionButton.addEventListener("click",()=>{
-        setPositions = true;
-        buttonDiv.style.display = "none";
-        startGameButton();
-    });
+    if(winner.user == true){
+        messageDiv.innerHTML = "<p>Congrats! You win!</p>";        
+    }
+    else{
+        messageDiv.innerHTML = "<p>It's ok .You lost</p>";
+    }
+    const reloadButton = document.createElement("button");
+    reloadButton.className = 'reload-button';
+    reloadButton.innerHTML = "Play again";
+    reloadButton.addEventListener('click',()=>{location.reload()});
+    
+    messageDiv.appendChild(reloadButton);
+    messageWrapper.appendChild(messageDiv);
+    document.body.appendChild(messageWrapper);
 }
 
-function startGameButton(){
-    let buttonDiv = document.createElement("div");
-    buttonDiv.className = 'start-game-button'; 
-    let startButton = document.createElement("button");
-    startButton.className = "startButton";
-    startButton.innerText = "Start";
-    buttonDiv.appendChild(startButton);
-    document.getElementsByClassName("container")[0].insertAdjacentElement("beforebegin",buttonDiv);
-
-    startButton.addEventListener("click",()=>{
-        setPositions = true;
-        buttonDiv.style.display = "none";
-    });
-}
-
-function initDom(){
+function initDom(game){
     createBoards();
-    setPositionsButton();
+    setPositionsButton(game);
 }
 export default initDom;
