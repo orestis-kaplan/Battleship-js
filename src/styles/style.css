@@ -85,12 +85,16 @@ body{
     padding: 10px 0;
     background-color: aquamarine;
     border: none;
+    border-radius: 6px;
+    font-size: 18px;
 }
 
 .startButton{
     padding: 10px 37px;
     background-color: aquamarine;
     border: none;
+    border-radius: 6px;
+    font-size: 18px;
 }
 .set-positions-button{
     text-align: center;

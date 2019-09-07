@@ -1,265 +1,255 @@
-import boards from '../src/setups/initBoard.js';
+import boards from './setups/initBoard';
 
 let setPositions = false;
 
-function createBoards(){    
-    let boardsArray = Object.values(boards);
-    let container = document.createElement("div");
-    container.className = "container";
-    
-    boardsArray.forEach((board,index) => {
-        let boardDiv = document.createElement('div');
-        boardDiv.className = `player-${index+1}-board`;
+function draggable(shipImg, board, ship) {
+  let directionX = 0;
+  let directionY = 0;
+  let startX = 0;
+  let startY = 0;
+  let drag = false;
 
-        board.map.forEach(element=>{
-            element.forEach(coordinate=>{
-                let ship = coordinate.occupied ? coordinate.occupied.getPosition()[coordinate.occupied.getPosition().length - 1] : null;
-                let shipImg = document.createElement('img');
-                let cell = document.createElement('div');
-                cell.className = ((index === 1) ? 'cell-dark' : 'cell');
-                cell.dataset.x = coordinate.x;
-                cell.dataset.y = coordinate.y;
-                boardDiv.appendChild(cell);
+  shipImg.addEventListener('mousedown', (event) => {
+    if (setPositions === true) {
+      event.preventDefault();
+      startX = event.clientX;
+      startY = event.clientY;
+      board.removeShip(ship);
+      drag = true;
+    }
+  });
 
-                if(ship !== null && ship.x === coordinate.x && ship.y === coordinate.y && index == 0){
-                    ship = coordinate.occupied;  
-                    shipImg.className = `ship-${ship.length}-image`;
-                    shipImg.src = `./src/images/ship-${ship.length}.png`;
-                    shipImg.style.position = 'absolute';
-                    shipImg.addEventListener('dblclick',(event)=>{      
-                        if(setPositions === true){
-                            event.preventDefault();          
-                            board.removeShip(ship);                    
-                            rotation(ship,shipImg);                    
-                            board.rotateShip(ship);     
-                        }                    
-                    });
-                    initImage(ship,shipImg);
-                    cell.appendChild(shipImg);    
-                }                
-                else if(ship !== null && ship.x === coordinate.x && ship.y === coordinate.y && index == 1){
-                    ship = coordinate.occupied;  
-                    shipImg.className = `ship-${ship.length}-destroyed-image`;
-                    shipImg.src = `./src/images/ship-${ship.length}-destroyed.png`;
-                    shipImg.style.position = 'absolute';
-                    shipImg.style.display = 'none';
-                    initImage(ship,shipImg);
-                    cell.appendChild(shipImg);
-                }
-                draggable(shipImg,board,ship);
-            });
-        });
-        container.appendChild(boardDiv);
-        document.body.appendChild(container);
-    });
+  document.addEventListener('mousemove', (event) => {
+    if (drag === true && setPositions === true) {
+      event.preventDefault();
+      if (event.clientX % 50 === 0) {
+        if (startX > event.clientX) {
+          ship.position.x -= 1;
+          directionX -= 52;
+          startX -= 52;
+        } else {
+          ship.position.x += 1;
+          directionX += 52;
+          startX += 52;
+        }
+      }
+      if (event.clientY % 50 === 0) {
+        if (startY > event.clientY) {
+          ship.position.y += 1;
+          directionY -= 52;
+          startY -= 52;
+        } else {
+          ship.position.y -= 1;
+          directionY += 52;
+          startY += 52;
+        }
+      }
+      if (ship.direction === 'horizontal') {
+        shipImg.style.transform = `rotate(90deg) translate(${directionY}px,-${directionX - 50}px)`;
+      } else { shipImg.style.transform = `translate(${directionX}px,${directionY}px)`; }
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (drag === true) {
+      drag = false;
+      board.insertShip(ship);
+    }
+  });
 }
 
-function draggable(shipImg,board,ship){
-    let directionX = 0;
-    let directionY = 0;
-    let startX = 0;
-    let startY = 0;
-    let drag = false;
+function initImage(ship, image) {
+  if (ship.direction === 'horizontal') { image.classList.add('horizontal'); } else { image.classList.add('vertical'); }
+}
 
-    shipImg.addEventListener("mousedown",(event)=>{
-        if(setPositions === true){
-            event.preventDefault();
-            startX = event.clientX;
-            startY = event.clientY;
-            board.removeShip(ship);   
-            drag = true;                 
-        }                    
-    });
+function rotation(ship, image) {
+  if (ship.direction !== 'horizontal') {
+    ship.direction = 'horizontal';
+    image.classList.remove('vertical');
+    image.classList.add('horizontal');
+  } else {
+    ship.direction = 'vertical';
+    image.classList.remove('horizontal');
+    image.classList.add('vertical');
+  }
+}
 
-    document.addEventListener("mousemove",(event)=>{
-        if(drag === true && setPositions === true){
-            event.preventDefault();
-            if(event.clientX % 50 === 0){
-                if(startX > event.clientX){
-                    ship.position.x--;
-                    directionX -= 52;
-                    startX -= 52;
-                }else{
-                    ship.position.x++;
-                    directionX += 52;
-                    startX += 52;
-                }             
-            }
-            if(event.clientY % 50 === 0){
-                if(startY > event.clientY){
-                    ship.position.y++;
-                    directionY -= 52;
-                    startY -= 52;
-                }else{
-                    ship.position.y--;
-                    directionY += 52;
-                    startY += 52;
-                }
-            }
-            if(ship.direction === 'horizontal'){                
-                shipImg.style.transform = `rotate(90deg) translate(${directionY}px,-${directionX-50}px)`;
-            }
-                
-            else
-                shipImg.style.transform = `translate(${directionX}px,${directionY}px)`;                
-        }       
-    });
+function animateExplosion(element) {
+  let position = 105;
+  const interval = 90;
+  const explosion = document.createElement('div');
+  explosion.className = 'explosion';
 
-    document.addEventListener('mouseup', e => {
-        if (drag === true) {
-            drag = false;
-            board.insertShip(ship);                    
-        }        
+  setInterval(() => {
+    explosion.style.backgroundPosition = `-${position}px -2px`;
+    if (position < 630) {
+      position += 105;
+    } else {
+      position = 105;
+    }
+  }, interval);
+  element.appendChild(explosion);
+}
+
+function endGameMessage(winner) {
+  const messageWrapper = document.createElement('div');
+  messageWrapper.className = 'message-wrapper';
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message-div';
+
+  if (winner.user === true) {
+    messageDiv.innerHTML = '<p>Congrats! You win!</p>';
+  } else {
+    messageDiv.innerHTML = "<p>It's ok .You lost</p>";
+  }
+  const reloadButton = document.createElement('button');
+  reloadButton.className = 'reload-button';
+  reloadButton.innerHTML = 'Play again';
+  reloadButton.addEventListener('click', () => { location.reload(); });
+
+  messageDiv.appendChild(reloadButton);
+  messageWrapper.appendChild(messageDiv);
+  document.body.appendChild(messageWrapper);
+}
+
+function playerPLays(game, cell, cellDiv, ship) {
+  const missedAttackImg = document.createElement('img');
+  missedAttackImg.src = './src/images/splash.png';
+  game.move(cell);
+  if (cell.occupied === null && cellDiv.children.length === 0) {
+    cellDiv.style.opacity = 1;
+    cellDiv.appendChild(missedAttackImg);
+  } else {
+    cellDiv.style.opacity = 1;
+    animateExplosion(cellDiv);
+    if (ship.energy === 0 && !game.gameOver()) {
+      document.getElementsByClassName(`ship-${ship.length}-destroyed-image`)[0].style.display = 'block';
+    } else if (game.gameOver()) {
+      endGameMessage(game.gameOver());
+    }
+  }
+}
+
+function computerPlays(game, ship) {
+  const missedAttackImg = document.createElement('img');
+  missedAttackImg.src = './src/images/splash.png';
+  const pos = game.computerMove(ship);
+  const enemyBoardCell = document.querySelector(`.cell[data-x~="${pos.x}"][data-y~="${pos.y}"]`);
+  ship = Object.values(boards)[0].map[pos.x][pos.y].occupied;
+  if (ship === null && enemyBoardCell.children.length === 0) {
+    enemyBoardCell.appendChild(missedAttackImg);
+  } else {
+    animateExplosion(enemyBoardCell);
+  }
+}
+
+function gameStart(game) {
+  const board = Object.values(boards)[1];
+  let cellIndex = 0;
+
+  board.map.forEach((element) => {
+    element.forEach((cell) => {
+      const cellDiv = document.getElementsByClassName('cell-dark')[cellIndex];
+      const missedAttackImg = document.createElement('img');
+      missedAttackImg.src = './src/images/splash.png';
+      const ship = cell.occupied;
+      cellDiv.addEventListener('click', () => {
+        if (!game.gameOver()) {
+          playerPLays(game, cell, cellDiv, ship);
+          computerPlays(game, ship);
+        }
       });
-}
-
-function initImage(ship,image){
-    if(ship.direction == 'horizontal')
-        image.classList.add('horizontal');    
-    else
-        image.classList.add('vertical');    
-}
-
-function rotation(ship,image){
-    if(ship.direction !== 'horizontal'){
-        ship.direction = 'horizontal';
-        image.classList.remove('vertical');
-        image.classList.add('horizontal');
-    }
-    else{
-        ship.direction = 'vertical';    
-        image.classList.remove('horizontal');
-        image.classList.add('vertical');
-    }
-}
-
-function setPositionsButton(game){
-    let buttonDiv = document.createElement("div");
-    buttonDiv.className = "set-positions-button";
-    let directionButton = document.createElement("button");
-    directionButton.className = "directionButton";
-    directionButton.innerText = "Begin positioning";
-    buttonDiv.appendChild(directionButton);
-    document.getElementsByClassName("container")[0].insertAdjacentElement("beforebegin",buttonDiv);
-
-    directionButton.addEventListener("click",()=>{
-        setPositions = true;
-        buttonDiv.style.display = "none";
-        startGameButton(game);
+      cellIndex += 1;
     });
+  });
 }
 
-function startGameButton(game){
-    let buttonDiv = document.createElement("div");
-    buttonDiv.className = 'start-game-button'; 
-    let startButton = document.createElement("button");
-    startButton.className = "startButton";
-    startButton.innerText = "Start";
-    buttonDiv.appendChild(startButton);
-    document.getElementsByClassName("container")[0].insertAdjacentElement("beforebegin",buttonDiv);
+function startGameButton(game) {
+  const buttonDiv = document.createElement('div');
+  buttonDiv.className = 'start-game-button';
+  const startButton = document.createElement('button');
+  startButton.className = 'startButton';
+  startButton.innerText = 'Start';
+  buttonDiv.appendChild(startButton);
+  document.getElementsByClassName('container')[0].insertAdjacentElement('beforebegin', buttonDiv);
 
-    startButton.addEventListener("click",()=>{
-        setPositions = false;
-        buttonDiv.style.display = "none";
-        gameStart(game);
-    });
+  startButton.addEventListener('click', () => {
+    setPositions = false;
+    buttonDiv.style.display = 'none';
+    gameStart(game);
+  });
 }
 
-function gameStart(game){
-    let board = Object.values(boards)[1];
-    let cellIndex = 0;
+function setPositionsButton(game) {
+  const buttonDiv = document.createElement('div');
+  buttonDiv.className = 'set-positions-button';
+  const directionButton = document.createElement('button');
+  directionButton.className = 'directionButton';
+  directionButton.innerText = 'Begin positioning';
+  buttonDiv.appendChild(directionButton);
+  document.getElementsByClassName('container')[0].insertAdjacentElement('beforebegin', buttonDiv);
 
-    board.map.forEach((element)=>{
-        element.forEach((cell)=>{
-            let cellDiv = document.getElementsByClassName('cell-dark')[cellIndex];
-            let missedAttackImg = document.createElement('img');
-            missedAttackImg.src = './src/images/splash.png';
-            let ship = cell.occupied;
-            cellDiv.addEventListener('click',()=>{
-                if(!game.gameOver()){
-                    playerPLays(game,cell,cellDiv,ship);
-                    computerPlays(game,ship);               
-                }                                        
-            });
-            cellIndex +=1 ;
-        });
-        
-    });
+  directionButton.addEventListener('click', () => {
+    setPositions = true;
+    buttonDiv.style.display = 'none';
+    startGameButton(game);
+  });
 }
 
-function playerPLays(game,cell,cellDiv,ship){
-    let missedAttackImg = document.createElement('img');
-    missedAttackImg.src = './src/images/splash.png';
-    game.move(cell);    
-    if(cell.occupied === null){
-        cellDiv.style.opacity = 1;
-        cellDiv.appendChild(missedAttackImg);   
-        console.log(cellDiv,missedAttackImg);
-    }else{
-        cellDiv.style.opacity = 1;
-        animateExplosion(cellDiv);
-        if(ship.energy === 0 && !game.gameOver()){                            
-            document.getElementsByClassName(`ship-${ship.length}-destroyed-image`)[0].style.display = "block";
-        }else if(game.gameOver()){
-            endGameMessage(game.gameOver());
+function createBoards() {
+  const boardsArray = Object.values(boards);
+  const container = document.createElement('div');
+  container.className = 'container';
+
+  boardsArray.forEach((board, index) => {
+    const boardDiv = document.createElement('div');
+    boardDiv.className = `player-${index + 1}-board`;
+
+    board.map.forEach((element) => {
+      element.forEach((coordinate) => {
+        let ship = (
+          (coordinate.occupied) ? coordinate.occupied.getPosition()[coordinate.occupied.getPosition().length - 1] : null);
+        const shipImg = document.createElement('img');
+        const cell = document.createElement('div');
+        cell.className = ((index === 1) ? 'cell-dark' : 'cell');
+        cell.dataset.x = coordinate.x;
+        cell.dataset.y = coordinate.y;
+        boardDiv.appendChild(cell);
+
+        if (ship !== null && ship.x === coordinate.x && ship.y === coordinate.y && index === 0) {
+          ship = coordinate.occupied;
+          shipImg.className = `ship-${ship.length}-image`;
+          shipImg.src = `./src/images/ship-${ship.length}.png`;
+          shipImg.style.position = 'absolute';
+          shipImg.addEventListener('dblclick', (event) => {
+            if (setPositions === true) {
+              event.preventDefault();
+              board.removeShip(ship);
+              rotation(ship, shipImg);
+              board.rotateShip(ship);
+            }
+          });
+          initImage(ship, shipImg);
+          cell.appendChild(shipImg);
+        } else if (ship !== null && ship.x === coordinate.x && ship.y === coordinate.y && index === 1) {
+          ship = coordinate.occupied;
+          shipImg.className = `ship-${ship.length}-destroyed-image`;
+          shipImg.src = `./src/images/ship-${ship.length}-destroyed.png`;
+          shipImg.style.position = 'absolute';
+          shipImg.style.display = 'none';
+          initImage(ship, shipImg);
+          cell.appendChild(shipImg);
         }
-    }
+        draggable(shipImg, board, ship);
+      });
+    });
+    container.appendChild(boardDiv);
+    document.body.appendChild(container);
+  });
 }
 
-function computerPlays(game,ship){
-    let missedAttackImg = document.createElement('img');
-    missedAttackImg.src = './src/images/splash.png';
-    let pos = game.computerMove(ship); 
-    let enemyBoardCell = document.querySelector(`.cell[data-x~="${pos.x}"][data-y~="${pos.y}"]`);
-    ship = Object.values(boards)[0].map[pos.x][pos.y].occupied;
-    if(ship === null){
-        enemyBoardCell.appendChild(missedAttackImg);   
-    }else{
-        animateExplosion(enemyBoardCell);     
-    }
-}
-
-function animateExplosion(element){    
-    let position = 105;
-    const interval = 90;
-    let explosion = document.createElement('div');
-    explosion.className = 'explosion';
-
-    setInterval(()=>{
-        explosion.style.backgroundPosition = `-${position}px -2px`;
-        if(position < 630){
-            position += 105;
-        }else{
-            position = 105;
-        }
-    },interval);
-    element.appendChild(explosion);
-}
-
-function endGameMessage(winner){
-    const messageWrapper = document.createElement("div");
-    messageWrapper.className = 'message-wrapper';
-    const messageDiv = document.createElement("div");
-    messageDiv.className = 'message-div';
-
-    if(winner.user == true){
-        messageDiv.innerHTML = "<p>Congrats! You win!</p>";        
-    }
-    else{
-        messageDiv.innerHTML = "<p>It's ok .You lost</p>";
-    }
-    const reloadButton = document.createElement("button");
-    reloadButton.className = 'reload-button';
-    reloadButton.innerHTML = "Play again";
-    reloadButton.addEventListener('click',()=>{location.reload()});
-    
-    messageDiv.appendChild(reloadButton);
-    messageWrapper.appendChild(messageDiv);
-    document.body.appendChild(messageWrapper);
-}
-
-function initDom(game){
-    createBoards();
-    setPositionsButton(game);
+function initDom(game) {
+  createBoards();
+  setPositionsButton(game);
 }
 export default initDom;

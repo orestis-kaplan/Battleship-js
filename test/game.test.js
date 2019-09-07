@@ -9,15 +9,13 @@ describe("Game over should return the right winner",()=>{
     const p1 = new Player(board1);
     const p2 = new Player(board2,false);
     const game = new Game(p1,p2);
-    board1.ships.length = 5;
-    board2.ships.length = 5;
 
     test("Winner should be null",()=>{
         expect(game.gameOver()).toBe(null);
     });
 
     test("Winner should be player1 when player2 ships are 0",()=>{        
-        p2.board.ships.length = 0;
+        p2.board.ships = 0;
         expect(game.gameOver()).toEqual(p1);
     });
 });

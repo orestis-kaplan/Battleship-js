@@ -1,15 +1,16 @@
 
-function initMap(size){
-  var sx = 0;
-  var sy = 0;
-  let map = Array.from(Array(size),row => row = Array.from(Array(size),(column) =>{	
-      if(sy > size-1){
-        sx++;
-        sy=0;
-      }      
-      return column = {x: sx, y: sy++,occupied: null};
-    }));
-   return map;
+function initMap(size) {
+  let sx = 0;
+  let sy = 0;
+  const map = Array.from(Array(size), (row) => row = Array.from(Array(size), (column) => {
+    if (sy > size - 1) {
+      sx += 1;
+      sy = 0;
+    }
+    column = { x: sx, y: sy++, occupied: null };
+    return column;
+  }));
+  return map;
 }
 
 export default class Gameboard {
@@ -34,15 +35,15 @@ export default class Gameboard {
     }
   }
 
-  removeShip(ship) { 
-    ship.getPosition().forEach(pos =>{ this.map[pos.x][pos.y].occupied = null;});
+  removeShip(ship) {
+    ship.getPosition().forEach((pos) => this.map[pos.x][pos.y].occupied = null);
   }
 
   insertShip(ship) {
-    ship.getPosition().forEach(pos => this.map[pos.x][pos.y].occupied = ship);
+    ship.getPosition().forEach((pos) => this.map[pos.x][pos.y].occupied = ship);
   }
 
-  rotateShip(ship) {    
-    ship.getRotatedPositions().forEach(pos => this.map[pos.x][pos.y].occupied = ship);              
+  rotateShip(ship) {
+    ship.getRotatedPositions().forEach((pos) => this.map[pos.x][pos.y].occupied = ship);
   }
 }
