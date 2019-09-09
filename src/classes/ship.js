@@ -1,27 +1,25 @@
-export default class Ship {
-  constructor(length, direction, position) {
-    this.length = length;
-    this.direction = direction;
-    this.position = position;
-    this.energy = length;
+const Ship = function(length, direction, position) {
+  this.length = length;
+  this.direction = direction;
+  this.position = position;
+  this.energy = length;
 
-    if (typeof length === 'undefined') {
-      throw new Error('Must define length');
-    }
-    if (typeof direction === 'undefined') {
-      throw new Error('Must define direction');
-    }
+  if (typeof length === 'undefined') {
+    throw new Error('Must define length');
+  }
+  if (typeof direction === 'undefined') {
+    throw new Error('Must define direction');
   }
 
-  hit() {
+  this.hit = () => {
     this.energy -= 1;
-  }
+  };
 
-  isSunk() {
+  this.isSunk = () => {
     return this.energy === 0;
-  }
+  };
 
-  getPosition() {
+  this.getPosition = () => {
     const occupiedPositionsOfShip = [];
     for (let i = 0; i < this.length; i += 1) {
       if (this.direction === 'horizontal') {
@@ -37,9 +35,9 @@ export default class Ship {
       }
     }
     return occupiedPositionsOfShip;
-  }
+  };
 
-  getRotatedPositions() {
+  this.getRotatedPositions = () => {
     const rotatedPositions = [];
     let newPosition = null;
     for (let i = 0; i < this.length; i += 1) {
@@ -54,5 +52,8 @@ export default class Ship {
     if (newPosition !== null) this.position = newPosition;
 
     return rotatedPositions;
-  }
-}
+  };
+
+};
+
+export default Ship;

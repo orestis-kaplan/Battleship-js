@@ -1,4 +1,3 @@
-
 function initMap(size) {
   let sx = 0;
   let sy = 0;
@@ -13,15 +12,13 @@ function initMap(size) {
   return map;
 }
 
-export default class Gameboard {
-  constructor() {
+const Gameboard = function() {
     this.map = initMap(10);
     this.ships = 5;
     this.attacksOnTargetPositions = [];
     this.missedAttacksPositions = [];
-  }
 
-  receiveAttack(position) {
+  this.receiveAttack = (position) => {
     const ship = this.map[position.x][position.y].occupied;
     if (ship !== null) {
       ship.hit();
@@ -33,17 +30,18 @@ export default class Gameboard {
     } else {
       this.missedAttacksPositions.push(position);
     }
-  }
+  };
 
-  removeShip(ship) {
+  this.removeShip = (ship) => {
     ship.getPosition().forEach((pos) => this.map[pos.x][pos.y].occupied = null);
-  }
+  };
 
-  insertShip(ship) {
+  this.insertShip = (ship) => {
     ship.getPosition().forEach((pos) => this.map[pos.x][pos.y].occupied = ship);
-  }
+  };
 
-  rotateShip(ship) {
+  this.rotateShip = (ship) => {
     ship.getRotatedPositions().forEach((pos) => this.map[pos.x][pos.y].occupied = ship);
-  }
+  };
 }
+export default Gameboard;
