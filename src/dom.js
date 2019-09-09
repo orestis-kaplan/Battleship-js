@@ -143,13 +143,11 @@ function computerPlays(game, ship) {
   }
 }
 
-function available(cell,board){
-  let occupiedMissedCell = board.missedAttacksPositions.some(pos => pos.x === cell.x && pos.y === cell.y);
-  let occupiedAttackedCell = board.attacksOnTargetPositions.some(pos => pos.x === cell.x && pos.y === cell.y);
-  if(occupiedMissedCell || occupiedAttackedCell)
-    return false;
-  else 
-    return true;
+function available(cell, board) {
+  const occupiedMissedCell = board.missedAttacksPositions.some((pos) => pos.x === cell.x && pos.y === cell.y);
+  const occupiedAttackedCell = board.attacksOnTargetPositions.some((pos) => pos.x === cell.x && pos.y === cell.y);
+  if (occupiedMissedCell || occupiedAttackedCell) return false;
+  return true;
 }
 
 function gameStart(game) {
@@ -162,8 +160,8 @@ function gameStart(game) {
       const missedAttackImg = document.createElement('img');
       missedAttackImg.src = './src/images/splash.png';
       const ship = cell.occupied;
-      cellDiv.addEventListener('click', () => {        
-        if (!game.gameOver() && available(cell,board)) {
+      cellDiv.addEventListener('click', () => {
+        if (!game.gameOver() && available(cell, board)) {
           playerPLays(game, cell, cellDiv, ship);
           computerPlays(game, ship);
         }

@@ -1,4 +1,4 @@
-const Ship = function(length, direction, position) {
+const Ship = function (length, direction, position) {
   this.length = length;
   this.direction = direction;
   this.position = position;
@@ -15,9 +15,7 @@ const Ship = function(length, direction, position) {
     this.energy -= 1;
   };
 
-  this.isSunk = () => {
-    return this.energy === 0;
-  };
+  this.isSunk = () => this.energy === 0;
 
   this.getPosition = () => {
     const occupiedPositionsOfShip = [];
@@ -53,7 +51,6 @@ const Ship = function(length, direction, position) {
 
     return rotatedPositions;
   };
-
 };
 
 export default Ship;

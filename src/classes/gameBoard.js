@@ -12,11 +12,11 @@ function initMap(size) {
   return map;
 }
 
-const Gameboard = function() {
-    this.map = initMap(10);
-    this.ships = 5;
-    this.attacksOnTargetPositions = [];
-    this.missedAttacksPositions = [];
+const Gameboard = function () {
+  this.map = initMap(10);
+  this.ships = 5;
+  this.attacksOnTargetPositions = [];
+  this.missedAttacksPositions = [];
 
   this.receiveAttack = (position) => {
     const ship = this.map[position.x][position.y].occupied;
@@ -43,5 +43,5 @@ const Gameboard = function() {
   this.rotateShip = (ship) => {
     ship.getRotatedPositions().forEach((pos) => this.map[pos.x][pos.y].occupied = ship);
   };
-}
+};
 export default Gameboard;

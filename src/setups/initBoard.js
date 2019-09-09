@@ -32,7 +32,7 @@ const positions2 = [[
   { x: 3, y: 2, direction: 'horizontal' },
   { x: 4, y: 4, direction: 'vertical' },
   { x: 5, y: 0, direction: 'horizontal' },
-]
+],
 ];
 
 
