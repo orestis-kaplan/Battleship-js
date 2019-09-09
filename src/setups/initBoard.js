@@ -23,15 +23,15 @@ const positions2 = [[
   { x: 3, y: 4, direction: 'vertical' },
   { x: 5, y: 6, direction: 'vertical' },
   { x: 2, y: 3, direction: 'horizontal' },
-  { x: 7, y: 5, direction: 'vertical' },
-  { x: 9, y: 8, direction: 'horizontal' },
+  { x: 7, y: 4, direction: 'vertical' },
+  { x: 5, y: 8, direction: 'horizontal' },
 ],
 [
   { x: 7, y: 6, direction: 'vertical' },
   { x: 5, y: 8, direction: 'vertical' },
-  { x: 3, y: 6, direction: 'horizontal' },
+  { x: 3, y: 2, direction: 'horizontal' },
   { x: 4, y: 4, direction: 'vertical' },
-  { x: 9, y: 0, direction: 'horizontal' },
+  { x: 5, y: 0, direction: 'horizontal' },
 ]
 ];
 
