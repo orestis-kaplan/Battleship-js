@@ -1,10 +1,10 @@
 const Game = function (player1, player2) {
-  this.player1 = player1;
-  this.player2 = player2;
-  this.currentPlayer = player1;
-  this.finished = false;
+  var player1 = player1;
+  var player2 = player2;
+  var currentPlayer = player1;
+  var finished = false;
 
-  this.gameOver = () => {
+  function gameOver() {
     let winner = null;
     if (this.player1.board.ships === 0) {
       this.finished = true;
@@ -16,7 +16,7 @@ const Game = function (player1, player2) {
     return winner;
   };
 
-  this.move = (latlong) => {
+  function move(latlong) {
     const enemy = (
       (this.currentPlayer === this.player1) ? this.player2 : this.player1);
     if (this.finished === false) {
@@ -26,7 +26,7 @@ const Game = function (player1, player2) {
   };
 
 
-  this.computerMove = () => {
+  function computerMove() {
     const x = Math.floor(Math.random() * 10);
     const y = Math.floor(Math.random() * 10);
 
@@ -34,6 +34,8 @@ const Game = function (player1, player2) {
     this.move(pos);
     return pos;
   };
+
+  return {player1,player2,currentPlayer,finished,gameOver,move,computerMove}
 };
 
 export default Game;

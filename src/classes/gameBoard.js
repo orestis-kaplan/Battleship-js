@@ -13,12 +13,12 @@ function initMap(size) {
 }
 
 const Gameboard = function () {
-  this.map = initMap(10);
-  this.ships = 5;
-  this.attacksOnTargetPositions = [];
-  this.missedAttacksPositions = [];
+  var map = initMap(10);
+  var ships = 5;
+  var attacksOnTargetPositions = [];
+  var missedAttacksPositions = [];
 
-  this.receiveAttack = (position) => {
+  function receiveAttack(position) {
     const ship = this.map[position.x][position.y].occupied;
     if (ship !== null) {
       ship.hit();
@@ -32,16 +32,18 @@ const Gameboard = function () {
     }
   };
 
-  this.removeShip = (ship) => {
+  function removeShip(ship) {
     ship.getPosition().forEach((pos) => this.map[pos.x][pos.y].occupied = null);
   };
 
-  this.insertShip = (ship) => {
+  function insertShip(ship) {
     ship.getPosition().forEach((pos) => this.map[pos.x][pos.y].occupied = ship);
   };
 
-  this.rotateShip = (ship) => {
+  function rotateShip(ship) {
     ship.getRotatedPositions().forEach((pos) => this.map[pos.x][pos.y].occupied = ship);
   };
+
+  return {map,ships,attacksOnTargetPositions,missedAttacksPositions,receiveAttack,removeShip,insertShip,rotateShip}
 };
 export default Gameboard;
