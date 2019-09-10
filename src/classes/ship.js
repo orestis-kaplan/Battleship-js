@@ -1,8 +1,8 @@
-const Ship = function (length, direction, position) {
-  var length = length;
-  var direction = direction;
-  var position = position;
-  var energy = length;
+const Ship = function (size, dire, pos) {
+  const length = size;
+  const direction = dire;
+  const position = pos;
+  const energy = size;
 
   if (typeof length === 'undefined') {
     throw new Error('Must define length');
@@ -11,16 +11,14 @@ const Ship = function (length, direction, position) {
     throw new Error('Must define direction');
   }
 
-  function hit(){
+  function hit() {
     this.energy -= 1;
-  };
+  }
 
-  function isSunk(){
-    if(this.energy === 0)
-     return true;
-    else 
-     return false;
-  };
+  function isSunk() {
+    if (this.energy === 0) return true;
+    return false;
+  }
 
   function getPosition() {
     const occupiedPositionsOfShip = [];
@@ -38,7 +36,7 @@ const Ship = function (length, direction, position) {
       }
     }
     return occupiedPositionsOfShip;
-  };
+  }
 
   function getRotatedPositions() {
     const rotatedPositions = [];
@@ -53,10 +51,12 @@ const Ship = function (length, direction, position) {
       }
     }
     if (newPosition !== null) this.position = newPosition;
-    
+
     return rotatedPositions;
+  }
+  return {
+    length, direction, position, energy, hit, isSunk, getPosition, getRotatedPositions,
   };
-  return{length,direction,position,energy: energy,hit,isSunk,getPosition,getRotatedPositions}
 };
 
 export default Ship;

@@ -1,8 +1,8 @@
-const Game = function (player1, player2) {
-  var player1 = player1;
-  var player2 = player2;
-  var currentPlayer = player1;
-  var finished = false;
+const Game = function (p1, p2) {
+  const player1 = p1;
+  const player2 = p2;
+  const currentPlayer = p1;
+  const finished = false;
 
   function gameOver() {
     let winner = null;
@@ -14,7 +14,7 @@ const Game = function (player1, player2) {
       winner = this.player1;
     }
     return winner;
-  };
+  }
 
   function move(latlong) {
     const enemy = (
@@ -23,7 +23,7 @@ const Game = function (player1, player2) {
       enemy.board.receiveAttack({ x: latlong.x, y: latlong.y });
       this.currentPlayer = enemy;
     }
-  };
+  }
 
 
   function computerMove() {
@@ -33,9 +33,11 @@ const Game = function (player1, player2) {
     const pos = { x, y };
     this.move(pos);
     return pos;
-  };
+  }
 
-  return {player1,player2,currentPlayer,finished,gameOver,move,computerMove}
+  return {
+    player1, player2, currentPlayer, finished, gameOver, move, computerMove,
+  };
 };
 
 export default Game;
