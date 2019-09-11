@@ -154,9 +154,9 @@ function computerPlays(game, ship) {
 
 function available(cell, board) {
   const occupiedMissedCell = board.missedAttacksPositions.some((
-    (pos) => pos.x === cell.x && pos.y === cell.y));
+    pos => pos.x === cell.x && pos.y === cell.y));
   const occupiedAttackedCell = board.attacksOnTargetPositions.some((
-    (pos) => pos.x === cell.x && pos.y === cell.y));
+    pos => pos.x === cell.x && pos.y === cell.y));
 
   if (occupiedMissedCell || occupiedAttackedCell) return false;
   return true;
