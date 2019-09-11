@@ -1,5 +1,5 @@
 import GameBoard from '../classes/gameBoard';
-import Ship from '../classes/ship';
+import { Ship } from '../classes/ship';
 
 const board1 = new GameBoard();
 const board2 = new GameBoard();
