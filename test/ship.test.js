@@ -36,6 +36,7 @@ describe('Occupied positions of a ship', () => {
   const ship = new Ship(5, 'horizontal', { x: 5, y: 5 });
 
   test('Horizontal ship with length 5 and position: {x: 5,y:5} should return {x:10 , y:5}', () => {
+<<<<<<< HEAD
     const pos =    [
       { x: 5, y: 5, occupied: ship },
       { x: 6, y: 5, occupied: ship },
@@ -44,10 +45,21 @@ describe('Occupied positions of a ship', () => {
       { x: 9, y: 5, occupied: ship },
     ]
     expect(ship.getPosition()).toEqual(pos);
+=======
+    expect(ship.getPosition()).toEqual(
+      [
+        { x: 5, y: 5, occupied: ship },
+        { x: 6, y: 5, occupied: ship },
+        { x: 7, y: 5, occupied: ship },
+        { x: 8, y: 5, occupied: ship },
+        { x: 9, y: 5, occupied: ship }],
+    );
+>>>>>>> 6eb990a9b5430138ae885ca1f6708458432fab80
   });
 
   test('Vertical ship with length 5 and position: {x: 5,y:5} should return {x:5 , y:10}', () => {
     ship.direction = 'vertical';
+<<<<<<< HEAD
     const pos =  [
       { x: 5, y: 5, occupied: ship },
       { x: 5, y: 6, occupied: ship },
@@ -56,6 +68,15 @@ describe('Occupied positions of a ship', () => {
       { x: 5, y: 9, occupied: ship },
     ]
     expect(ship.getPosition()).toEqual(pos);
+=======
+    expect(ship.getPosition()).toEqual(
+      [{ x: 5, y: 5, occupied: ship },
+        { x: 5, y: 6, occupied: ship },
+        { x: 5, y: 7, occupied: ship },
+        { x: 5, y: 8, occupied: ship },
+        { x: 5, y: 9, occupied: ship }],
+    );
+>>>>>>> 6eb990a9b5430138ae885ca1f6708458432fab80
   });
 });
 
@@ -69,8 +90,7 @@ describe('Rotated ship positions', () => {
         { x: 9, y: 4, occupied: ship },
         { x: 9, y: 3, occupied: ship },
         { x: 9, y: 2, occupied: ship },
-        { x: 9, y: 1, occupied: ship },
-      ],
+        { x: 9, y: 1, occupied: ship }],
     );
   });
 
@@ -82,8 +102,7 @@ describe('Rotated ship positions', () => {
         { x: 4, y: 9, occupied: ship },
         { x: 3, y: 9, occupied: ship },
         { x: 2, y: 9, occupied: ship },
-        { x: 1, y: 9, occupied: ship },
-      ],
+        { x: 1, y: 9, occupied: ship }],
     );
   });
 });
