@@ -1,5 +1,5 @@
-import Ship from '../src/classes/ship.js';
-import GameBoard from '../src/classes/gameBoard.js';
+import Ship from '../src/classes/ship';
+import GameBoard from '../src/classes/gameBoard';
 
 describe('Constructor tests', () => {
   test('Initial values should be correct', () => {
@@ -23,13 +23,15 @@ describe('ReceiveAttack inner function', () => {
 
   test('Attack on ship is successfull', () => {
     const position = { x: 3, y: 0 };
-    const successfullAttack = ship.getPosition().some((element) => element.x == position.x && element.y == position.y);
+    const successfullAttack = (
+      ship.getPosition().some((element) => element.x === position.x && element.y === position.y));
     expect(successfullAttack).toBeTruthy();
   });
 
   test('Attack on ship is unsuccessfull', () => {
     const position = { x: 3, y: 3 };
-    const unsuccessfullAttack = ship.getPosition().some((element) => element.x == position.x && element.y == position.y);
+    const unsuccessfullAttack = (
+      ship.getPosition().some((element) => element.x === position.x && element.y === position.y));
     expect(unsuccessfullAttack).toBeFalsy();
   });
 
@@ -62,7 +64,6 @@ describe('ReceiveAttack inner function', () => {
     board.receiveAttack(position);
     expect(ship.isSunk()).toBeTruthy();
   });
-
 });
 
 describe('Ship removal and placement', () => {
@@ -73,27 +74,26 @@ describe('Ship removal and placement', () => {
     board = new GameBoard();
     ship = new Ship(2, 'horizontal', { x: 0, y: 0 });
   });
-  
+
   test('After insertShip board.ships sould have length 2', () => {
     board.insertShip(ship);
     expect(board.map[ship.position.x][ship.position.y].occupied).toEqual(ship);
   });
 
-  test("After insert the position in the board should be filled with the ship at right position",()=>{
-    let pos = board.map[0][0];
+  test('After insert the position in the board should be filled with the ship at right position', () => {
+    const pos = board.map[0][0];
     board.insertShip(ship);
     expect(pos.occupied).toEqual(ship);
   });
-  
+
   test('When removing ship from board expect that position to be empty', () => {
     board.removeShip(ship);
     expect(board.map[ship.position.x][ship.position.y].occupied).toBeNull();
   });
 
-  test('When ship is removed occupied property changes to null in the map of board',()=>{
-    board.map.forEach(element => element.forEach(pos=>{
+  test('When ship is removed occupied property changes to null in the map of board', () => {
+    board.map.forEach((element) => element.forEach((pos) => {
       expect(pos.occupied).toBeNull();
     }));
   });
-
 });

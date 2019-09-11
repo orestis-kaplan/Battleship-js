@@ -1,10 +1,14 @@
 import boards from './setups/initBoard';
+import Ship from './classes/ship';
 
 let setPositions = false;
 
 function draggable(shipImg, board, ship) {
+  const image = shipImg;
   let directionX = 0;
   let directionY = 0;
+  let posX = (ship !== null) ? ship.position.x : 0;
+  let posY = ship ? ship.position.y : 0;
   let startX = 0;
   let startY = 0;
   let drag = false;
@@ -24,36 +28,37 @@ function draggable(shipImg, board, ship) {
       event.preventDefault();
       if (event.clientX % 50 === 0) {
         if (startX > event.clientX) {
-          ship.position.x -= 1;
+          posX -= 1;
           directionX -= 52;
           startX -= 52;
         } else {
-          ship.position.x += 1;
+          posX += 1;
           directionX += 52;
           startX += 52;
         }
       }
       if (event.clientY % 50 === 0) {
         if (startY > event.clientY) {
-          ship.position.y += 1;
+          posY += 1;
           directionY -= 52;
           startY -= 52;
         } else {
-          ship.position.y -= 1;
+          posY -= 1;
           directionY += 52;
           startY += 52;
         }
       }
       if (ship.direction === 'horizontal') {
-        shipImg.style.transform = `rotate(90deg) translate(${directionY}px,-${directionX - 50}px)`;
-      } else { shipImg.style.transform = `translate(${directionX}px,${directionY}px)`; }
+        image.style.transform = `rotate(90deg) translate(${directionY}px,-${directionX - 50}px)`;
+      } else { image.style.transform = `translate(${directionX}px,${directionY}px)`; }
     }
   });
 
   document.addEventListener('mouseup', () => {
     if (drag === true) {
       drag = false;
-      board.insertShip(ship);
+      const movedShip = new Ship(ship.length, ship.direction, { x: posX, y: posY });
+      board.insertShip(movedShip);
     }
   });
 }
@@ -63,14 +68,17 @@ function initImage(ship, image) {
 }
 
 function rotation(ship, image) {
-  if (ship.direction !== 'horizontal') {
-    ship.direction = 'horizontal';
-    image.classList.remove('vertical');
-    image.classList.add('horizontal');
+  const rotatedShip = ship;
+  const shipImg = image;
+
+  if (rotatedShip.direction !== 'horizontal') {
+    rotatedShip.direction = 'horizontal';
+    shipImg.classList.remove('vertical');
+    shipImg.classList.add('horizontal');
   } else {
-    ship.direction = 'vertical';
-    image.classList.remove('horizontal');
-    image.classList.add('vertical');
+    rotatedShip.direction = 'vertical';
+    shipImg.classList.remove('horizontal');
+    shipImg.classList.add('vertical');
   }
 }
 
@@ -105,7 +113,7 @@ function endGameMessage(winner) {
   const reloadButton = document.createElement('button');
   reloadButton.className = 'reload-button';
   reloadButton.innerHTML = 'Play again';
-  reloadButton.addEventListener('click', () => { location.reload(); });
+  reloadButton.addEventListener('click', () => { window.location.reload(); });
 
   messageDiv.appendChild(reloadButton);
   messageWrapper.appendChild(messageDiv);
@@ -113,15 +121,16 @@ function endGameMessage(winner) {
 }
 
 function playerPLays(game, cell, cellDiv, ship) {
+  const div = cellDiv;
   const missedAttackImg = document.createElement('img');
   missedAttackImg.src = './src/images/splash.png';
   game.move(cell);
-  if (cell.occupied === null && cellDiv.children.length === 0) {
-    cellDiv.style.opacity = 1;
-    cellDiv.appendChild(missedAttackImg);
+  if (cell.occupied === null && div.children.length === 0) {
+    div.style.opacity = 1;
+    div.appendChild(missedAttackImg);
   } else {
-    cellDiv.style.opacity = 1;
-    animateExplosion(cellDiv);
+    div.style.opacity = 1;
+    animateExplosion(div);
     if (ship.energy === 0 && !game.gameOver()) {
       document.getElementsByClassName(`ship-${ship.length}-destroyed-image`)[0].style.display = 'block';
     } else if (game.gameOver()) {
@@ -135,8 +144,8 @@ function computerPlays(game, ship) {
   missedAttackImg.src = './src/images/splash.png';
   const pos = game.computerMove(ship);
   const enemyBoardCell = document.querySelector(`.cell[data-x~="${pos.x}"][data-y~="${pos.y}"]`);
-  ship = Object.values(boards)[0].map[pos.x][pos.y].occupied;
-  if (ship === null && enemyBoardCell.children.length === 0) {
+  const newShip = Object.values(boards)[0].map[pos.x][pos.y].occupied;
+  if (newShip === null && enemyBoardCell.children.length === 0) {
     enemyBoardCell.appendChild(missedAttackImg);
   } else {
     animateExplosion(enemyBoardCell);
@@ -144,8 +153,12 @@ function computerPlays(game, ship) {
 }
 
 function available(cell, board) {
-  const occupiedMissedCell = board.missedAttacksPositions.some((pos) => pos.x === cell.x && pos.y === cell.y);
-  const occupiedAttackedCell = board.attacksOnTargetPositions.some((pos) => pos.x === cell.x && pos.y === cell.y);
+  const occupiedMissedCell = board.missedAttacksPositions.some(
+    (pos) => pos.x === cell.x && pos.y === cell.y,
+  );
+  const occupiedAttackedCell = board.attacksOnTargetPositions.some(
+    (pos) => pos.x === cell.x && pos.y === cell.y,
+  );
   if (occupiedMissedCell || occupiedAttackedCell) return false;
   return true;
 }
@@ -214,8 +227,10 @@ function createBoards() {
 
     board.map.forEach((element) => {
       element.forEach((coordinate) => {
-        let ship = (
-          (coordinate.occupied) ? coordinate.occupied.getPosition()[coordinate.occupied.getPosition().length - 1] : null);
+        let ship = coordinate.occupied;
+        const shipHead = (
+          (ship !== null) ? ship.getPosition()[coordinate.occupied.getPosition().length - 1] : null
+        );
         const shipImg = document.createElement('img');
         const cell = document.createElement('div');
         cell.className = ((index === 1) ? 'cell-dark' : 'cell');
@@ -223,8 +238,8 @@ function createBoards() {
         cell.dataset.y = coordinate.y;
         boardDiv.appendChild(cell);
 
-        if (ship !== null && ship.x === coordinate.x && ship.y === coordinate.y && index === 0) {
-          ship = coordinate.occupied;
+        if (ship !== null
+           && shipHead.x === coordinate.x && shipHead.y === coordinate.y && index === 0) {
           shipImg.className = `ship-${ship.length}-image`;
           shipImg.src = `./src/images/ship-${ship.length}.png`;
           shipImg.style.position = 'absolute';
@@ -238,7 +253,8 @@ function createBoards() {
           });
           initImage(ship, shipImg);
           cell.appendChild(shipImg);
-        } else if (ship !== null && ship.x === coordinate.x && ship.y === coordinate.y && index === 1) {
+        } else if (ship !== null
+           && shipHead.x === coordinate.x && shipHead.y === coordinate.y && index === 1) {
           ship = coordinate.occupied;
           shipImg.className = `ship-${ship.length}-destroyed-image`;
           shipImg.src = `./src/images/ship-${ship.length}-destroyed.png`;

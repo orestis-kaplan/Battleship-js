@@ -1,14 +1,8 @@
 function initMap(size) {
-  let sx = 0;
-  let sy = 0;
-  const map = Array.from(Array(size), (row) => row = Array.from(Array(size), (column) => {
-    if (sy > size - 1) {
-      sx += 1;
-      sy = 0;
-    }
-    column = { x: sx, y: sy++, occupied: null };
-    return column;
-  }));
+  const map = Array.from(
+    Array(size), (_element, row) => Array.from(Array(size), (_ele, column) => (
+      { x: row, y: column, occupied: null })),
+  );
   return map;
 }
 
@@ -33,19 +27,26 @@ const Gameboard = function () {
   }
 
   function removeShip(ship) {
-    ship.getPosition().forEach((pos) => this.map[pos.x][pos.y].occupied = null);
+    ship.getPosition().forEach((pos) => { this.map[pos.x][pos.y].occupied = null; });
   }
 
   function insertShip(ship) {
-    ship.getPosition().forEach((pos) => this.map[pos.x][pos.y].occupied = ship);
+    ship.getPosition().forEach((pos) => { this.map[pos.x][pos.y].occupied = ship; });
   }
 
   function rotateShip(ship) {
-    ship.getRotatedPositions().forEach((pos) => this.map[pos.x][pos.y].occupied = ship);
+    ship.getRotatedPositions().forEach((pos) => { this.map[pos.x][pos.y].occupied = ship; });
   }
 
   return {
-    map, ships, attacksOnTargetPositions, missedAttacksPositions, receiveAttack, removeShip, insertShip, rotateShip,
+    map,
+    ships,
+    attacksOnTargetPositions,
+    missedAttacksPositions,
+    receiveAttack,
+    removeShip,
+    insertShip,
+    rotateShip,
   };
 };
 export default Gameboard;
