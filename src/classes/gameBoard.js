@@ -1,8 +1,6 @@
 function initMap(size) {
-  const map = Array.from(
-    Array(size), (_element, row) => Array.from(Array(size), (_ele, column) => (
-      { x: row, y: column, occupied: null })),
-  );
+  const map = Array.from(Array(size), (_element, row) => Array.from(Array(size), (_ele, column) => (
+      { x: row, y: column, occupied: null })));
   return map;
 }
 
