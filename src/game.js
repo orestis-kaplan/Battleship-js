@@ -1,4 +1,4 @@
-const Game = function (p1, p2) {
+function Game(p1, p2) {
   const player1 = p1;
   const player2 = p2;
   const currentPlayer = p1;
@@ -25,7 +25,6 @@ const Game = function (p1, p2) {
     }
   }
 
-
   function computerMove() {
     const x = Math.floor(Math.random() * 10);
     const y = Math.floor(Math.random() * 10);
@@ -38,6 +37,6 @@ const Game = function (p1, p2) {
   return {
     player1, player2, currentPlayer, finished, gameOver, move, computerMove,
   };
-};
+}
 
 export default Game;

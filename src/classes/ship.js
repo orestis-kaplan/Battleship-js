@@ -1,4 +1,4 @@
-const Ship = function (size, dire, pos) {
+function Ship(size, dire, pos) {
   const length = size;
   const direction = dire;
   const position = pos;
@@ -63,6 +63,6 @@ const Ship = function (size, dire, pos) {
   return {
     length, direction, position, energy, hit, isSunk, getPosition, getRotatedPositions,
   };
-};
+}
 
 export default Ship;

@@ -1,11 +1,14 @@
 function initMap(size) {
-  const map = Array.from((
-    Array(size), (_element, row) => Array.from(Array(size), (_ele, column) => (
-      { x: row, y: column, occupied: null }))));
+  const map = Array.from(
+    Array(size), (_element, row) => Array.from(
+      Array(size), (_ele, column) => (
+        { x: row, y: column, occupied: null }),
+    ),
+  );
   return map;
 }
 
-const Gameboard = function () {
+function Gameboard() {
   const map = initMap(10);
   const ships = 5;
   const attacksOnTargetPositions = [];
@@ -47,5 +50,5 @@ const Gameboard = function () {
     insertShip,
     rotateShip,
   };
-};
+}
 export default Gameboard;

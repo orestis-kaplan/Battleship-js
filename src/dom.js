@@ -1,5 +1,4 @@
 import boards from './setups/initBoard';
-import Ship from './classes/ship';
 
 let setPositions = false;
 
@@ -13,7 +12,7 @@ function draggable(shipImg, board, ship) {
   let startY = 0;
   let drag = false;
 
-  shipImg.addEventListener('mousedown', (event) => {
+  image.addEventListener('mousedown', (event) => {
     if (setPositions === true) {
       event.preventDefault();
       startX = event.clientX;
@@ -57,8 +56,9 @@ function draggable(shipImg, board, ship) {
   document.addEventListener('mouseup', () => {
     if (drag === true) {
       drag = false;
-      const movedShip = new Ship(ship.length, ship.direction, { x: posX, y: posY });
-      board.insertShip(movedShip);
+      ship.position.x = posX;
+      ship.position.y = posY;
+      board.insertShip(ship);
     }
   });
 }
@@ -147,16 +147,16 @@ function computerPlays(game, ship) {
   const newShip = Object.values(boards)[0].map[pos.x][pos.y].occupied;
   if (newShip === null && enemyBoardCell.children.length === 0) {
     enemyBoardCell.appendChild(missedAttackImg);
-  } else {
+  } else if (newShip !== null && enemyBoardCell.children.length !== 0) {
     animateExplosion(enemyBoardCell);
   }
 }
 
 function available(cell, board) {
   const occupiedMissedCell = board.missedAttacksPositions.some((
-    pos => pos.x === cell.x && pos.y === cell.y));
+    (pos) => pos.x === cell.x && pos.y === cell.y));
   const occupiedAttackedCell = board.attacksOnTargetPositions.some((
-    pos => pos.x === cell.x && pos.y === cell.y));
+    (pos) => pos.x === cell.x && pos.y === cell.y));
 
   if (occupiedMissedCell || occupiedAttackedCell) return false;
   return true;
