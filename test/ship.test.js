@@ -36,27 +36,26 @@ describe('Occupied positions of a ship', () => {
   const ship = new Ship(5, 'horizontal', { x: 5, y: 5 });
 
   test('Horizontal ship with length 5 and position: {x: 5,y:5} should return {x:10 , y:5}', () => {
-    expect(ship.getPosition()).toEqual(
-      [
-        { x: 5, y: 5, occupied: ship },
-        { x: 6, y: 5, occupied: ship },
-        { x: 7, y: 5, occupied: ship },
-        { x: 8, y: 5, occupied: ship },
-        { x: 9, y: 5, occupied: ship },
-      ],
-    );
+    const pos =    [
+      { x: 5, y: 5, occupied: ship },
+      { x: 6, y: 5, occupied: ship },
+      { x: 7, y: 5, occupied: ship },
+      { x: 8, y: 5, occupied: ship },
+      { x: 9, y: 5, occupied: ship },
+    ]
+    expect(ship.getPosition()).toEqual(pos);
   });
 
   test('Vertical ship with length 5 and position: {x: 5,y:5} should return {x:5 , y:10}', () => {
     ship.direction = 'vertical';
-    expect(ship.getPosition()).toEqual(
-      [{ x: 5, y: 5, occupied: ship },
-        { x: 5, y: 6, occupied: ship },
-        { x: 5, y: 7, occupied: ship },
-        { x: 5, y: 8, occupied: ship },
-        { x: 5, y: 9, occupied: ship },
-      ],
-    );
+    const pos =  [
+      { x: 5, y: 5, occupied: ship },
+      { x: 5, y: 6, occupied: ship },
+      { x: 5, y: 7, occupied: ship },
+      { x: 5, y: 8, occupied: ship },
+      { x: 5, y: 9, occupied: ship },
+    ]
+    expect(ship.getPosition()).toEqual(pos);
   });
 });
 
