@@ -42,9 +42,7 @@ describe('Occupied positions of a ship', () => {
         { x: 6, y: 5, occupied: ship },
         { x: 7, y: 5, occupied: ship },
         { x: 8, y: 5, occupied: ship },
-        { x: 9, y: 5, occupied: ship },
-      ],
-    );
+        { x: 9, y: 5, occupied: ship }]);
   });
 
   test('Vertical ship with length 5 and position: {x: 5,y:5} should return {x:5 , y:10}', () => {
