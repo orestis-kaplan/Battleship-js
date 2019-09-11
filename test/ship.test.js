@@ -66,9 +66,7 @@ describe('Rotated ship positions', () => {
         { x: 9, y: 4, occupied: ship },
         { x: 9, y: 3, occupied: ship },
         { x: 9, y: 2, occupied: ship },
-        { x: 9, y: 1, occupied: ship },
-      ],
-    );
+        { x: 9, y: 1, occupied: ship }]);
   });
 
   test('Horizontal ship with length 5 and position: {x: 5,y:5} should return {x:1..5 , y:9}', () => {
@@ -79,8 +77,6 @@ describe('Rotated ship positions', () => {
         { x: 4, y: 9, occupied: ship },
         { x: 3, y: 9, occupied: ship },
         { x: 2, y: 9, occupied: ship },
-        { x: 1, y: 9, occupied: ship },
-      ],
-    );
+        { x: 1, y: 9, occupied: ship }]);
   });
 });
