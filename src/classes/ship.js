@@ -65,4 +65,4 @@ function Ship(size, dire, pos) {
   };
 }
 
-export { Ship };
+export default Ship;
