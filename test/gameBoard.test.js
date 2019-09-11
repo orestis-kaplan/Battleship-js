@@ -23,15 +23,15 @@ describe('ReceiveAttack inner function', () => {
 
   test('Attack on ship is successfull', () => {
     const position = { x: 3, y: 0 };
-    const successfullAttack = (
-      ship.getPosition().some((element) => element.x === position.x && element.y === position.y));
+    const successfullAttack = ship.getPosition().some((
+      (element) => element.x === position.x && element.y === position.y));
     expect(successfullAttack).toBeTruthy();
   });
 
   test('Attack on ship is unsuccessfull', () => {
     const position = { x: 3, y: 3 };
-    const unsuccessfullAttack = (
-      ship.getPosition().some((element) => element.x === position.x && element.y === position.y));
+    const unsuccessfullAttack = ship.getPosition().some((
+      (element) => element.x === position.x && element.y === position.y));
     expect(unsuccessfullAttack).toBeFalsy();
   });
 
@@ -92,8 +92,8 @@ describe('Ship removal and placement', () => {
   });
 
   test('When ship is removed occupied property changes to null in the map of board', () => {
-    board.map.forEach((element) => element.forEach((pos) => {
+    board.map.forEach(((element) => element.forEach((pos) => {
       expect(pos.occupied).toBeNull();
-    }));
+    })));
   });
 });
