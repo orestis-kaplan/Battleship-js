@@ -41,7 +41,8 @@ describe('Occupied positions of a ship', () => {
         { x: 6, y: 5, occupied: ship },
         { x: 7, y: 5, occupied: ship },
         { x: 8, y: 5, occupied: ship },
-        { x: 9, y: 5, occupied: ship }],
+        { x: 9, y: 5, occupied: ship },
+      ],
     );
   });
 
